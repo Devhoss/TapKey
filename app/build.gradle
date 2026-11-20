@@ -1,0 +1,63 @@
+plugins {
+    id 'com.android.application'
+}
+
+def keystorePropsFile = rootProject.file('keystore.properties')
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystorePropsFile.withInputStream { keystoreProps.load(it) }
+}
+
+android {
+    namespace 'com.tapkey.app'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.tapkey.app'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+        resourceConfigurations += ['en']
+    }
+
+    signingConfigs {
+        release {
+            if (keystorePropsFile.exists()) {
+                storeFile rootProject.file(keystoreProps['storeFile'])
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (keystorePropsFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig false
+        resValues false
+    }
+
+    packagingOptions {
+        resources {
+            excludes += ['DebugProbesKt.bin', 'kotlin/**', 'META-INF/*.version']
+        }
+    }
+}
+
+// No dependencies by design: standard Android framework APIs only.

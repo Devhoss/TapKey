@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Rounded widget outline -->
+    <path
+        android:pathData="M32,40h44a8,8 0 0 1 8,8v12a8,8 0 0 1 -8,8h-44a8,8 0 0 1 -8,-8v-12a8,8 0 0 1 8,-8z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3" />
+    <!-- Divider -->
+    <path
+        android:pathData="M54,38L54,70"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5" />
+    <!-- Digit marks -->
+    <path
+        android:pathData="M41,54m-4,0a4,4 0 1,0 8,0a4,4 0 1,0 -8,0"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M67,54m-4,0a4,4 0 1,0 8,0a4,4 0 1,0 -8,0"
+        android:fillColor="#FFFFFF" />
+</vector>

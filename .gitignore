@@ -1,0 +1,14 @@
+.gradle/
+build/
+app/build/
+.tooling/
+local.properties
+*.iml
+.idea/
+.DS_Store
+
+# Release signing material must never enter version control.
+tapkey-release.jks
+*.jks
+*.keystore
+keystore.properties

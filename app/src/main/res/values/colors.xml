@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App surfaces -->
+    <color name="bg">#F6F5F1</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="stroke">#E6E3DB</color>
+    <color name="text_primary">#1B1B1B</color>
+    <color name="text_secondary">#6E6E6E</color>
+    <color name="text_tertiary">#A9A69E</color>
+    <color name="accent">#A9762E</color>
+    <color name="badge_bg">#F3EFE4</color>
+    <color name="ripple">#1A000000</color>
+    <color name="icon_background">#171717</color>
+
+    <!-- Theme 1: Gold -->
+    <color name="theme_gold_bg">#E3C06B</color>
+    <color name="on_gold">#3B2B05</color>
+    <color name="div_gold">#33000000</color>
+
+    <!-- Theme 2: Black -->
+    <color name="theme_black_bg">#171717</color>
+    <color name="on_black">#FFFFFF</color>
+    <color name="div_black">#33FFFFFF</color>
+
+    <!-- Theme 3: Ivory -->
+    <color name="theme_ivory_bg">#F2EDE1</color>
+    <color name="on_ivory">#2A2A2A</color>
+    <color name="div_ivory">#22000000</color>
+
+    <!-- Theme 4: Clear -->
+    <color name="theme_clear_bg">#40FFFFFF</color>
+    <color name="on_clear">#FFFFFF</color>
+    <color name="div_clear">#66FFFFFF</color>
+
+    <!-- Theme 5: Sapphire -->
+    <color name="theme_sapphire_bg">#1B3A75</color>
+    <color name="on_sapphire">#EAF1FF</color>
+    <color name="div_sapphire">#44FFFFFF</color>
+
+    <!-- Theme 6: Invisible -->
+    <color name="theme_invisible_bg">#00000000</color>
+    <color name="on_invisible">#00000000</color>
+    <color name="div_invisible">#00000000</color>
+
+    <!-- Theme 7: Slate -->
+    <color name="theme_slate_bg">#4A5157</color>
+    <color name="on_slate">#F4F5F6</color>
+    <color name="div_slate">#44FFFFFF</color>
+
+    <!-- Theme 8: Coral -->
+    <color name="theme_coral_bg">#E8755C</color>
+    <color name="on_coral">#FFF6F3</color>
+    <color name="div_coral">#44FFFFFF</color>
+
+    <!-- Theme 9: Ruby -->
+    <color name="theme_ruby_bg">#93162C</color>
+    <color name="on_ruby">#FFEDF0</color>
+    <color name="div_ruby">#44FFFFFF</color>
+
+    <!-- Theme 10: Champagne -->
+    <color name="theme_champagne_bg">#E6D5B8</color>
+    <color name="on_champagne">#45371C</color>
+    <color name="div_champagne">#33000000</color>
+</resources>

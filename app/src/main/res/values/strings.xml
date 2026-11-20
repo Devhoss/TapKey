@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TapKey</string>
+
+    <string name="digit_one">1</string>
+    <string name="digit_two">2</string>
+
+    <string name="intro_title">Tap digits. Launch apps.</string>
+    <string name="intro_body">Tap 1, 2, 11, 22, 12 or 21 on the home-screen widget to instantly open the app assigned to each sequence.</string>
+    <string name="how_it_works">How it works</string>
+    <string name="tutorial_title">How it works</string>
+    <string name="tutorial_body">1. Long-press your home screen, choose Widgets, then drag the TapKey widget into place.\n\n2. Tap a digit once or twice: 1, 2, 11, 22, 12 or 21. A single digit waits a moment for a possible second tap, so 1 followed by 2 becomes the 12 sequence.\n\n3. Each sequence opens the app assigned to it. If nothing is assigned yet, TapKey opens the assignment screen for that sequence.\n\n4. Tap a shortcut row here to assign an app. Long-press a row to clear it.\n\n5. Pick a widget theme below. The Invisible theme hides the widget completely but keeps both tap areas working.</string>
+    <string name="tutorial_close">Got it</string>
+
+    <string name="section_shortcuts">Shortcuts</string>
+    <string name="section_theme">Widget theme</string>
+
+    <string name="shortcut_empty_title">Choose an app</string>
+    <string name="shortcut_unavailable_title">App unavailable</string>
+    <string name="shortcut_note">Tap %1$s on the widget</string>
+    <string name="shortcut_note_replace">Tap %1$s to replace it</string>
+    <string name="shortcut_cleared">Shortcut %1$s cleared</string>
+
+    <string name="choose_app">Choose App</string>
+    <string name="picker_target">Shortcut %1$s</string>
+    <string name="picker_current">Currently: %1$s</string>
+    <string name="picker_none">Currently: not assigned</string>
+    <string name="picker_missing">Currently: unavailable app</string>
+    <string name="search_apps">Search apps</string>
+    <string name="no_apps">No apps match your search</string>
+    <string name="back">Back</string>
+    <string name="share">Share</string>
+
+    <!-- Promotional copy for the share sheet. Text only: TapKey never shares files or links
+         other than the optional public link below. -->
+    <string name="share_text">TapKey — one tiny home-screen widget, six app shortcuts.\n\nTap 1, 2, 11, 22, 12 or 21 and the app you need opens instantly. No permissions, no ads, no accounts, no background services, under 50 KB.\n\nTen free widget themes, including a completely invisible one that still takes taps.</string>
+    <!-- Optional public link (source repo or store listing). Leave empty until one exists:
+         the share text then ends at the promo copy above. -->
+    <string name="share_link"></string>
+    <string name="widget_description">Two digits, six app shortcuts.</string>
+
+    <string name="theme_gold">Gold</string>
+    <string name="theme_black">Black</string>
+    <string name="theme_ivory">Ivory</string>
+    <string name="theme_clear">Clear</string>
+    <string name="theme_sapphire">Sapphire</string>
+    <string name="theme_invisible">Invisible</string>
+    <string name="theme_slate">Slate</string>
+    <string name="theme_coral">Coral</string>
+    <string name="theme_ruby">Ruby</string>
+    <string name="theme_champagne">Champagne</string>
+
+    <string-array name="theme_names">
+        <item>@string/theme_gold</item>
+        <item>@string/theme_black</item>
+        <item>@string/theme_ivory</item>
+        <item>@string/theme_clear</item>
+        <item>@string/theme_sapphire</item>
+        <item>@string/theme_invisible</item>
+        <item>@string/theme_slate</item>
+        <item>@string/theme_coral</item>
+        <item>@string/theme_ruby</item>
+        <item>@string/theme_champagne</item>
+    </string-array>
+</resources>
