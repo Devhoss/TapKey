@@ -3,7 +3,7 @@
     android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
+    android:background="?attr/paletteBg"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/app_name"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/paletteTextPrimary"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -60,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/intro_title"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/paletteTextPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="3dp"
                     android:text="@string/intro_body"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/paletteTextSecondary"
                     android:textSize="14sp" />
 
                 <TextView
@@ -83,10 +83,20 @@
                     android:paddingBottom="8dp"
                     android:paddingEnd="12dp"
                     android:text="@string/how_it_works"
-                    android:textColor="@color/accent"
+                    android:textColor="?attr/paletteAccent"
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:text="@string/section_appearance" />
+
+            <LinearLayout
+                android:id="@+id/appearance_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
 
             <TextView
                 style="@style/SectionLabel"

@@ -20,7 +20,7 @@
         android:background="@drawable/badge_bg"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:textColor="@color/accent"
+        android:textColor="?attr/paletteAccent"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/paletteTextPrimary"
             android:textSize="16sp" />
 
         <TextView
@@ -56,7 +56,7 @@
             android:layout_marginTop="2dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/text_secondary"
+            android:textColor="?attr/paletteTextSecondary"
             android:textSize="12sp" />
     </LinearLayout>
 

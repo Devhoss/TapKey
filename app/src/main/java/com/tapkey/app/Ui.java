@@ -1,12 +1,21 @@
 package com.tapkey.app;
 
 import android.app.Activity;
+import android.content.Context;
+import android.util.TypedValue;
 import android.view.View;
 
 /** Window-inset handling for edge-to-edge Android 15+ without any support library. */
 final class Ui {
 
     private Ui() {
+    }
+
+    /** Resolves a palette attribute to its ARGB value for the activity's current theme. */
+    static int themeColor(Context context, int attr) {
+        TypedValue value = new TypedValue();
+        context.getTheme().resolveAttribute(attr, value, true);
+        return value.data;
     }
 
     @SuppressWarnings("deprecation")

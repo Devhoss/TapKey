@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- In-app palette. Every value is provided by Theme.TapKey.Light / .Dark, so the
+         System / Light / Dark setting only has to swap one theme resource. -->
+    <attr name="paletteBg" format="color" />
+    <attr name="paletteSurface" format="color" />
+    <attr name="paletteStroke" format="color" />
+    <attr name="paletteTextPrimary" format="color" />
+    <attr name="paletteTextSecondary" format="color" />
+    <attr name="paletteTextTertiary" format="color" />
+    <attr name="paletteAccent" format="color" />
+    <attr name="paletteBadgeBg" format="color" />
+    <attr name="paletteRipple" format="color" />
+</resources>

@@ -7,6 +7,10 @@ local.properties
 .idea/
 .DS_Store
 
+# Local test artefacts
+.tmp/
+build-release.log
+
 # Release signing material must never enter version control.
 tapkey-release.jks
 *.jks

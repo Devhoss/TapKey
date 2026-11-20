@@ -3,7 +3,7 @@
 Two digits on one tiny home-screen widget. Tap `1`, `2`, `11`, `22`, `12` or `21` to open six different apps.
 
 Native Android, Java + framework Views only. **No dependencies, no permissions, no services, no network.**
-Release APK: **44.8 KB**.
+Release APK: **48.1 KB** (49,226 bytes).
 
 ---
 
@@ -86,8 +86,11 @@ Sequence timing is one constant: `TapActivity.SEQUENCE_TIMEOUT_MS` (350 ms).
   assignment whose app is gone is kept and shown as "App unavailable" until replaced.
 - **Widget updates.** Only on provider update, resize, theme change and assignment change. No periodic
   updates, no services, no alarms, no wake locks.
+- **Appearance.** System / Light / Dark for the app screens, stored in the same preferences file.
+  System follows the phone's dark-mode setting. The widget keeps its own ten themes, independent of this.
 - **Backup.** `allowBackup="true"` with SharedPreferences included in both cloud backup and
-  device-to-device transfer. Nothing is uploaded by the app itself.
+  device-to-device transfer. Nothing is uploaded by the app itself. A full `bmgr` backup/restore round
+  trip was verified on device; Google cloud backup was not.
 
 See `docs/TECHNICAL-REPORT.md` for the audit, architecture decisions, APK size breakdown, device test
 results and known gaps.

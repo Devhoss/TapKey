@@ -3,7 +3,7 @@
     android:id="@+id/picker_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
+    android:background="?attr/paletteBg"
     android:orientation="vertical">
 
     <LinearLayout
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/choose_app"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/paletteTextPrimary"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -42,7 +42,7 @@
             android:id="@+id/picker_target"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
+            android:textColor="?attr/paletteTextSecondary"
             android:textSize="13sp" />
 
         <EditText
@@ -60,8 +60,8 @@
             android:paddingEnd="14dp"
             android:paddingBottom="12dp"
             android:singleLine="true"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_tertiary"
+            android:textColor="?attr/paletteTextPrimary"
+            android:textColorHint="?attr/paletteTextTertiary"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -81,7 +81,7 @@
         android:layout_marginTop="28dp"
         android:gravity="center"
         android:text="@string/no_apps"
-        android:textColor="@color/text_secondary"
+        android:textColor="?attr/paletteTextSecondary"
         android:textSize="14sp"
         android:visibility="gone" />
 

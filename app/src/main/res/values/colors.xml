@@ -61,4 +61,18 @@
     <color name="theme_champagne_bg">#E6D5B8</color>
     <color name="on_champagne">#45371C</color>
     <color name="div_champagne">#33000000</color>
+    <!-- Dark palette for the app UI (the widget themes below are independent of it) -->
+    <color name="dark_bg">#121212</color>
+    <color name="dark_surface">#1C1C1E</color>
+    <color name="dark_stroke">#2F2F33</color>
+    <color name="dark_text_primary">#F2F2F2</color>
+    <color name="dark_text_secondary">#A9A9A9</color>
+    <color name="dark_text_tertiary">#7A7A7A</color>
+    <color name="dark_accent">#D8A85C</color>
+    <color name="dark_badge_bg">#2A2A2C</color>
+    <color name="dark_ripple">#33FFFFFF</color>
+
+    <color name="on_accent">#FFFFFF</color>
+    <!-- Icon grey chosen to stay legible on both the light and the dark surface. -->
+    <color name="icon_neutral">#8A8A8A</color>
 </resources>

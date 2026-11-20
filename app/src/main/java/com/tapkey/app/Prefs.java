@@ -8,6 +8,7 @@ public final class Prefs {
 
     private static final String FILE = "tapkey_settings";
     private static final String KEY_THEME = "widget_theme";
+    private static final String KEY_APPEARANCE = "appearance";
 
     private Prefs() {
     }
@@ -37,5 +38,14 @@ public final class Prefs {
 
     public static void setTheme(Context context, int theme) {
         store(context).edit().putInt(KEY_THEME, theme).apply();
+    }
+
+    /** System / Light / Dark for the app screens; {@link Appearance#SYSTEM} by default. */
+    public static int getAppearance(Context context) {
+        return store(context).getInt(KEY_APPEARANCE, Appearance.SYSTEM);
+    }
+
+    public static void setAppearance(Context context, int appearance) {
+        store(context).edit().putInt(KEY_APPEARANCE, appearance).apply();
     }
 }

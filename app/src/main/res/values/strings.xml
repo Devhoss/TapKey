@@ -12,6 +12,11 @@
     <string name="tutorial_body">1. Long-press your home screen, choose Widgets, then drag the TapKey widget into place.\n\n2. Tap a digit once or twice: 1, 2, 11, 22, 12 or 21. A single digit waits a moment for a possible second tap, so 1 followed by 2 becomes the 12 sequence.\n\n3. Each sequence opens the app assigned to it. If nothing is assigned yet, TapKey opens the assignment screen for that sequence.\n\n4. Tap a shortcut row here to assign an app. Long-press a row to clear it.\n\n5. Pick a widget theme below. The Invisible theme hides the widget completely but keeps both tap areas working.</string>
     <string name="tutorial_close">Got it</string>
 
+    <string name="section_appearance">Appearance</string>
+    <string name="appearance_system">System</string>
+    <string name="appearance_light">Light</string>
+    <string name="appearance_dark">Dark</string>
+
     <string name="section_shortcuts">Shortcuts</string>
     <string name="section_theme">Widget theme</string>
 

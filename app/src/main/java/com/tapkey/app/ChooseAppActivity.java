@@ -42,6 +42,8 @@ public class ChooseAppActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Match the appearance chosen on the main screen.
+        setTheme(Appearance.themeResource(this));
         super.onCreate(savedInstanceState);
         String requested = getIntent().getStringExtra(EXTRA_SEQUENCE);
         sequence = Shortcuts.isValid(requested) ? requested : Shortcuts.ALL[0];

@@ -22,17 +22,25 @@ public class MainActivity extends Activity {
 
     public static final String EXTRA_PICKER_SEQUENCE = "com.tapkey.app.extra.PICKER_SEQUENCE";
 
+    private static final int[] APPEARANCE_MODES = {
+            Appearance.SYSTEM, Appearance.LIGHT, Appearance.DARK
+    };
+
     private final View[] shortcutRows = new View[Shortcuts.ALL.length];
     private final View[] themeCells = new View[ThemeStyle.COUNT];
+    private final TextView[] appearancePills = new TextView[APPEARANCE_MODES.length];
 
     private PackageManager packageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Must happen before the content is inflated: the palette lives in the theme.
+        setTheme(Appearance.themeResource(this));
         super.onCreate(savedInstanceState);
         packageManager = getPackageManager();
         setContentView(R.layout.activity_main);
         Ui.applySystemBarInsets(this, R.id.main_root);
+        buildAppearanceRow();
         buildShortcutRows();
         buildThemeGrid();
         findViewById(R.id.share_action).setOnClickListener(view -> share());
@@ -53,6 +61,7 @@ public class MainActivity extends Activity {
         for (int index = 0; index < shortcutRows.length; index++) {
             bindShortcutRow(index);
         }
+        bindAppearanceSelection();
         bindThemeSelection();
     }
 
@@ -133,6 +142,49 @@ public class MainActivity extends Activity {
         } catch (PackageManager.NameNotFoundException | RuntimeException e) {
             return null;
         }
+    }
+
+    // ---------------------------------------------------------------- appearance
+
+    private void buildAppearanceRow() {
+        LinearLayout row = findViewById(R.id.appearance_row);
+        int[] labels = {
+                R.string.appearance_system, R.string.appearance_light, R.string.appearance_dark
+        };
+        for (int index = 0; index < APPEARANCE_MODES.length; index++) {
+            TextView pill = (TextView) getLayoutInflater()
+                    .inflate(R.layout.item_appearance, row, false);
+            pill.setText(labels[index]);
+            final int mode = APPEARANCE_MODES[index];
+            pill.setOnClickListener(view -> selectAppearance(mode));
+            LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(0, dp(44), 1f);
+            if (index > 0) {
+                params.setMarginStart(dp(8));
+            }
+            row.addView(pill, params);
+            appearancePills[index] = pill;
+        }
+    }
+
+    private void bindAppearanceSelection() {
+        int current = Prefs.getAppearance(this);
+        for (int index = 0; index < appearancePills.length; index++) {
+            boolean selected = APPEARANCE_MODES[index] == current;
+            appearancePills[index].setBackgroundResource(
+                    selected ? R.drawable.pill_selected : R.drawable.pill_idle);
+            appearancePills[index].setTextColor(selected
+                    ? getColor(R.color.on_accent)
+                    : Ui.themeColor(this, R.attr.paletteTextSecondary));
+        }
+    }
+
+    private void selectAppearance(int mode) {
+        if (Prefs.getAppearance(this) == mode) {
+            return;
+        }
+        Prefs.setAppearance(this, mode);
+        recreate();
     }
 
     // ---------------------------------------------------------------- themes
