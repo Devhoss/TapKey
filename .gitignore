@@ -6,6 +6,7 @@ local.properties
 *.iml
 .idea/
 .DS_Store
+AGENTS.md
 
 # Local test artefacts
 .tmp/
