@@ -58,6 +58,13 @@ android {
             excludes += ['DebugProbesKt.bin', 'kotlin/**', 'META-INF/*.version']
         }
     }
+
+    // Name the release artifact after the app and version, e.g. TapKey-1.0.apk.
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = "TapKey-${variant.versionName}.apk"
+        }
+    }
 }
 
 // No dependencies by design: standard Android framework APIs only.
