@@ -26,6 +26,9 @@ public class MainActivity extends Activity {
             Appearance.SYSTEM, Appearance.LIGHT, Appearance.DARK
     };
 
+    /** Clear is fully transparent, so its gallery tile needs a dark backdrop to look like it does. */
+    private static final int THEME_CLEAR = 3;
+
     private final View[] shortcutRows = new View[Shortcuts.ALL.length];
     private final View[] themeCells = new View[ThemeStyle.COUNT];
     private final TextView[] appearancePills = new TextView[APPEARANCE_MODES.length];
@@ -196,7 +199,7 @@ public class MainActivity extends Activity {
         for (int theme = 0; theme < ThemeStyle.COUNT; theme++) {
             View cell = inflater.inflate(R.layout.item_theme, grid, false);
             FrameLayout box = cell.findViewById(R.id.theme_preview_box);
-            View preview = inflater.inflate(R.layout.widget_tapkey, box, false);
+            View preview = inflater.inflate(ThemeStyle.layout(theme), box, false);
             ThemeStyle.applyToView(this, preview, theme);
             box.addView(preview);
             ((TextView) cell.findViewById(R.id.theme_name)).setText(ThemeStyle.name(this, theme));
@@ -218,8 +221,13 @@ public class MainActivity extends Activity {
         for (int theme = 0; theme < themeCells.length; theme++) {
             View cell = themeCells[theme];
             boolean isSelected = theme == selected;
-            cell.findViewById(R.id.theme_preview_box).setBackgroundResource(
-                    isSelected ? R.drawable.theme_ring_selected : R.drawable.theme_ring_idle);
+            int ring;
+            if (theme == THEME_CLEAR) {
+                ring = isSelected ? R.drawable.theme_ring_clear_selected : R.drawable.theme_ring_clear;
+            } else {
+                ring = isSelected ? R.drawable.theme_ring_selected : R.drawable.theme_ring_idle;
+            }
+            cell.findViewById(R.id.theme_preview_box).setBackgroundResource(ring);
             TextView name = cell.findViewById(R.id.theme_name);
             name.setTextColor(getColor(isSelected ? R.color.accent : R.color.text_secondary));
             name.setTypeface(null, isSelected ? Typeface.BOLD : Typeface.NORMAL);

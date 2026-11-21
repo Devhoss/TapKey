@@ -27,10 +27,12 @@
     <color name="on_ivory">#2A2A2A</color>
     <color name="div_ivory">#22000000</color>
 
-    <!-- Theme 4: Clear -->
-    <color name="theme_clear_bg">#40FFFFFF</color>
-    <color name="on_clear">#FFFFFF</color>
+    <!-- Theme 4: Clear (transparent widget; digits float on the wallpaper) -->
+    <color name="on_clear">#FFFFFFFF</color>
     <color name="div_clear">#66FFFFFF</color>
+    <!-- Gallery only: Clear previews over a dark wallpaper so white digits stay visible. -->
+    <color name="clear_preview_top">#343A42</color>
+    <color name="clear_preview_bottom">#12151A</color>
 
     <!-- Theme 5: Sapphire -->
     <color name="theme_sapphire_bg">#1B3A75</color>

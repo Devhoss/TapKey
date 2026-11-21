@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copy of widget_tapkey.xml used only by the Clear theme: the digits carry a soft
+     shadow so white text stays readable on a bright wallpaper. Invisible keeps the
+     shared layout, so it still renders nothing at all. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg_black"
+    android:baselineAligned="false"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tap_one"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:shadowColor="#99000000"
+        android:shadowDx="0"
+        android:shadowDy="1"
+        android:shadowRadius="5"
+        android:text="@string/digit_one"
+        android:textColor="@color/on_black"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <!-- RemoteViews cannot inflate a plain View, so the divider is a TextView. -->
+    <TextView
+        android:id="@+id/widget_divider"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="11dp"
+        android:layout_marginBottom="11dp"
+        android:background="@color/div_black" />
+
+    <TextView
+        android:id="@+id/tap_two"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:shadowColor="#99000000"
+        android:shadowDx="0"
+        android:shadowDy="1"
+        android:shadowRadius="5"
+        android:text="@string/digit_two"
+        android:textColor="@color/on_black"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

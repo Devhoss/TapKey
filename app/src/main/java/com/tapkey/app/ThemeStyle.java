@@ -15,6 +15,9 @@ public final class ThemeStyle {
     public static final int COUNT = 10;
     public static final int DEFAULT = 1; // Black
 
+    /** Clear is the only theme with shadowed digits, so it needs its own copy of the layout. */
+    private static final int CLEAR = 3;
+
     private static final int[] BACKGROUND = {
             R.drawable.widget_bg_gold,
             R.drawable.widget_bg_black,
@@ -67,6 +70,11 @@ public final class ThemeStyle {
 
     public static int background(int theme) {
         return BACKGROUND[clamp(theme)];
+    }
+
+    /** The layout to inflate for a theme; only Clear differs. */
+    public static int layout(int theme) {
+        return clamp(theme) == CLEAR ? R.layout.widget_tapkey_clear : R.layout.widget_tapkey;
     }
 
     public static int digitColor(Context context, int theme) {

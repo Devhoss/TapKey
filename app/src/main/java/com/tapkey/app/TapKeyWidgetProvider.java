@@ -40,8 +40,9 @@ public class TapKeyWidgetProvider extends AppWidgetProvider {
     }
 
     private static void updateWidget(Context context, AppWidgetManager manager, int appWidgetId) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_tapkey);
-        ThemeStyle.applyToWidget(context, views, Prefs.getTheme(context));
+        int theme = Prefs.getTheme(context);
+        RemoteViews views = new RemoteViews(context.getPackageName(), ThemeStyle.layout(theme));
+        ThemeStyle.applyToWidget(context, views, theme);
         views.setOnClickPendingIntent(R.id.tap_one, digitPendingIntent(context, 1));
         views.setOnClickPendingIntent(R.id.tap_two, digitPendingIntent(context, 2));
         manager.updateAppWidget(appWidgetId, views);
