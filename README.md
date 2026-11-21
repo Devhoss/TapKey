@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/icon.png" width="120" height="120" alt="TapKey app icon">
+</p>
+
 # TapKey
 
 **Six apps. One widget. Two digits.**
@@ -182,6 +186,7 @@ app/src/main/res/
   xml/backup_rules.xml            Auto Backup (API ≤ 30)
   xml/data_extraction_rules.xml   backup + device transfer (API 31+)
 
+docs/icon.png, docs/icon.svg      app icon for the README (matches the adaptive launcher icon)
 docs/TECHNICAL-REPORT.md          audit, measurements, test matrix, known gaps
 ```
 

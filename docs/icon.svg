@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="108" height="108" role="img" aria-label="TapKey app icon">
+  <title>TapKey</title>
+  <rect width="108" height="108" rx="22.5" fill="#171717"/>
+  <g transform="translate(18 18) scale(0.666667)" fill="none" stroke="#ffffff">
+    <path d="M32,40h44a8,8 0 0 1 8,8v12a8,8 0 0 1 -8,8h-44a8,8 0 0 1 -8,-8v-12a8,8 0 0 1 8,-8z" stroke-width="3"/>
+    <path d="M54,38L54,70" stroke-width="2.5"/>
+  </g>
+  <g transform="translate(18 18) scale(0.666667)" fill="#ffffff">
+    <circle cx="41" cy="54" r="4"/>
+    <circle cx="67" cy="54" r="4"/>
+  </g>
+</svg>
