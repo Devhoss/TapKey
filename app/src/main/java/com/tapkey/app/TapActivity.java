@@ -1,35 +1,41 @@
 package com.tapkey.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
 /**
- * Invisible activity that receives one widget tap and resolves it into a shortcut.
+ * Receives one widget tap and resolves it into a shortcut.
  *
  * <p>A single digit cannot be launched immediately because it may be the first half of
  * {@code 11}, {@code 12}, {@code 22} or {@code 21}. The first tap is therefore held for
- * {@link #SEQUENCE_TIMEOUT_MS}; a second tap inside that window resolves the pair at once,
- * and otherwise the held digit resolves on its own.
+ * {@link Prefs#getTapTimeoutMs} (350 ms by default, adjustable in Settings); a second tap inside
+ * that window resolves the pair at once, and otherwise the held digit resolves on its own.
  *
- * <p>Timing happens while this activity is resumed rather than inside a broadcast receiver,
- * so the follow-up launch is an ordinary foreground app launch and stays clear of Android's
- * background activity start restrictions.
+ * <p>The activity must not keep a window on screen while a digit waits. Any window above the home
+ * screen blocks touches to it — the platform puts an input sink over the activity record — so the
+ * second tap could never reach the widget that turns it into the next PendingIntent. The activity
+ * therefore resolves what it can and finishes during {@code onCreate}, before the system adds its
+ * window, leaving the home screen fully tappable for the rest of the window. The second tap then
+ * starts this activity again through its own PendingIntent and the pair resolves immediately.
+ *
+ * <p>The widget tap is a PendingIntent sent by the launcher, which is in the foreground, so both
+ * the immediate pair launch and the delayed single-digit launch stay inside Android's
+ * background-activity-start rules.
  */
 public class TapActivity extends Activity {
 
     public static final String EXTRA_DIGIT = "com.tapkey.app.extra.DIGIT";
 
-    /** How long a single digit waits for a possible second tap. */
-    public static final long SEQUENCE_TIMEOUT_MS = 350L;
-
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
-    /** First digit of the sequence in progress, shared so process/activity recreation cannot lose it. */
+    /** First digit of the sequence in progress, plus the context that resolves it. */
     private static String sPendingDigit;
     private static Runnable sPendingResolver;
+    private static Context sAppContext;
 
     private boolean resolved;
 
@@ -37,21 +43,6 @@ public class TapActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         readDigit(getIntent());
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        readDigit(intent);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (!resolved) {
-            resolveOnDestroy();
-        }
     }
 
     private void readDigit(Intent intent) {
@@ -67,9 +58,13 @@ public class TapActivity extends Activity {
         String pending = sPendingDigit;
         if (pending == null) {
             sPendingDigit = String.valueOf(digit);
-            Resolve resolve = new Resolve(sPendingDigit, this);
+            sAppContext = getApplicationContext();
+            Resolve resolve = new Resolve(sPendingDigit);
             sPendingResolver = resolve;
-            HANDLER.postDelayed(resolve, SEQUENCE_TIMEOUT_MS);
+            HANDLER.postDelayed(resolve, Prefs.getTapTimeoutMs(this));
+            // Finish now: the window is never added, so the home screen stays tappable and the
+            // second tap arrives as a fresh PendingIntent instead of being swallowed by this one.
+            finishQuietly();
         } else {
             String sequence = pending + digit;
             clearPending();
@@ -99,45 +94,13 @@ public class TapActivity extends Activity {
         sPendingDigit = null;
     }
 
-    /**
-     * Safety net: if the tap surface goes away while a digit is still held, resolve that digit
-     * rather than swallowing the tap.
-     */
-    private void resolveOnDestroy() {
-        if (!(sPendingResolver instanceof Resolve)) {
-            return;
-        }
-        Resolve current = (Resolve) sPendingResolver;
-        if (current.owner != this) {
-            return;
-        }
-        String sequence = sPendingDigit;
-        clearPending();
-        if (sequence == null) {
-            return;
-        }
-        resolved = true;
-        Intent target = SequenceLauncher.launchIntent(getApplicationContext(), sequence);
-        if (target == null) {
-            return;
-        }
-        target.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-        try {
-            getApplication().startActivity(target);
-        } catch (RuntimeException ignored) {
-            // The app was destroyed mid-gesture and the system refused the launch.
-        }
-    }
-
     /** Runs on the main thread once the single-tap window has passed. */
     private static final class Resolve implements Runnable {
 
         private final String sequence;
-        private final TapActivity owner;
 
-        Resolve(String sequence, TapActivity owner) {
+        Resolve(String sequence) {
             this.sequence = sequence;
-            this.owner = owner;
         }
 
         @Override
@@ -146,7 +109,11 @@ public class TapActivity extends Activity {
                 return;
             }
             clearPending();
-            owner.launch(sequence);
+            Context context = sAppContext;
+            if (context == null) {
+                return;
+            }
+            SequenceLauncher.launch(context, sequence);
         }
     }
 }

@@ -36,6 +36,11 @@
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+
         <!-- Transparent, invisible host for the tap sequence. Launched from the widget's
              PendingIntent so the sequence can be timed while TapKey is in the foreground,
              which keeps the follow-up app launch inside Android's background-launch rules. -->

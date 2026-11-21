@@ -1,14 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Clear: fully transparent glass. A very faint gradient and a hairline border only hint
-     at the tap targets; the wallpaper shows through. -->
+<!-- Clear: completely transparent. There is no panel, no sheen and no divider — only the
+     two digits are drawn, so the wallpaper (or whatever is behind the widget) shows through. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <gradient
-        android:angle="270"
-        android:endColor="#05FFFFFF"
-        android:startColor="#1FFFFFFF" />
-    <corners android:radius="16dp" />
-    <stroke
-        android:width="1dp"
-        android:color="#4DFFFFFF" />
+    <solid android:color="#00000000" />
 </shape>

@@ -27,9 +27,9 @@
     <color name="on_ivory">#2A2A2A</color>
     <color name="div_ivory">#22000000</color>
 
-    <!-- Theme 4: Clear (transparent widget; digits float on the wallpaper) -->
+    <!-- Theme 4: Clear (nothing but white digits on the wallpaper; no panel, no divider) -->
     <color name="on_clear">#FFFFFFFF</color>
-    <color name="div_clear">#66FFFFFF</color>
+    <color name="div_clear">#00000000</color>
     <!-- Gallery only: Clear previews over a dark wallpaper so white digits stay visible. -->
     <color name="clear_preview_top">#343A42</color>
     <color name="clear_preview_bottom">#12151A</color>

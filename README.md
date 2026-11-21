@@ -6,7 +6,7 @@ TapKey puts a single 2×1 widget on your home screen with the digits `1 │ 2`. 
 sequences — `1`, `2`, `11`, `22`, `12`, `21` — and the matching app opens.
 
 Native Android. Java and framework views only: **no dependencies, no permissions, no background
-services, no network access, no analytics.** The signed release APK is **51,414 bytes (50.2 KB)**.
+services, no network access, no analytics.** The signed release APK is **55,961 bytes (54.6 KB)**.
 
 ---
 
@@ -40,11 +40,11 @@ and tested with both Samsung One UI Home and Smart Launcher.
 
 ## Install
 
-Download `TapKey-1.0.apk` from the [latest release](https://github.com/Devhoss/tapkey/releases/latest)
+Download `TapKey-1.1.apk` from the [latest release](https://github.com/Devhoss/tapkey/releases/latest)
 and open it on the phone, or sideload it:
 
 ```bash
-adb install -r TapKey-1.0.apk
+adb install -r TapKey-1.1.apk
 ```
 
 Android may ask you to allow installing from this source. The APK is signed with TapKey's release key,
@@ -79,7 +79,7 @@ Ten widget themes, all free, all included:
 | Gold | Warm gold, dark digits |
 | Black | Opaque charcoal |
 | Ivory | Soft cream, dark digits |
-| **Clear** | Transparent glass — digits and divider float on your wallpaper behind a faint sheen and hairline border |
+| **Clear** | Nothing but the two digits — no panel, no divider, no border; white digits float on your wallpaper with a soft shadow |
 | Sapphire | Deep blue |
 | **Invisible** | Nothing at all; the tap targets still work |
 | Slate | Opaque grey |
@@ -90,17 +90,30 @@ Ten widget themes, all free, all included:
 The theme applies to every widget instance immediately. Each theme's digits are tuned for its
 background, and Clear adds a soft shadow so white digits stay readable on bright wallpapers.
 
-## Appearance
+## Settings
 
-The app's own screens support **System**, **Light** and **Dark**. *System* follows the phone's dark-mode
-setting. The widget themes are independent of this setting — a widget can be Gold while the app is dark.
+The gear icon in the top right of the main screen opens **Settings**, which holds everything that is not
+a shortcut assignment:
+
+- **Appearance** — System, Light or Dark for the app's own screens; *System* follows the phone's
+dark-mode setting. The widget themes are independent, so a widget can be Gold while the app is dark.
+- **Widget theme** — the ten themes above.
+- **Tap timeout** — the window between the first and second tap, in milliseconds, adjustable from 100
+  to 2000 with 350 ms as the default. It is also how long a lone digit waits before it launches.
+- **Share** — the share icon in the Settings header, which sends a short text-only description of TapKey
+  with a link to this repository.
 
 ## How taps are resolved
 
-The first digit is held for **350 ms**:
+The first digit is held for the **tap timeout** — 350 ms by default, adjustable in Settings from 100 to
+2000 ms. The timeout is the gap allowed *between the two digits*, not a rhythm you have to keep:
 
 - a second tap inside that window resolves `11`, `22`, `12` or `21` immediately;
 - otherwise the held digit resolves on its own as `1` or `2`.
+
+So with 900 ms set, tapping `1` and then `1` anywhere from 0 to 900 ms later gives `11`, and the window
+restarts on every first tap. Deliveries are measured from the first tap only — there is no second
+deadline after the pair resolves.
 
 A sequence never produces both a single and a double launch, and the state resets after every resolution.
 
@@ -138,16 +151,17 @@ export PATH="$JAVA_HOME/bin:$PATH"
 The release artifact is named from `versionName`:
 
 ```
-app/build/outputs/apk/release/TapKey-1.0.apk
+app/build/outputs/apk/release/TapKey-1.1.apk
 ```
 
 ## Project layout
 
 ```
 app/src/main/java/com/tapkey/app/
-  MainActivity.java          shortcut rows, theme gallery, appearance, share, how-it-works
+  MainActivity.java          shortcut rows, how-it-works, Settings entry point
+  SettingsActivity.java      appearance, theme gallery, tap timeout, share
   ChooseAppActivity.java     app picker: installed launcher apps + search
-  TapActivity.java           transparent tap surface and the sequence engine
+  TapActivity.java           tap entry point and the sequence engine (finishes before drawing)
   TapKeyWidgetProvider.java  AppWidgetProvider, RemoteViews rendering, click PendingIntents
   SequenceLauncher.java      sequence → launch app, or → assignment screen
   ThemeStyle.java            the 10 widget themes (background, digit, divider) for widget and previews
@@ -159,6 +173,7 @@ app/src/main/java/com/tapkey/app/
 app/src/main/res/
   layout/widget_tapkey.xml        the widget, also used for previews and the picker
   layout/widget_tapkey_clear.xml  same layout with digit shadows — used only by Clear
+  layout/activity_settings.xml    appearance, theme gallery and tap timing
   layout/item_theme.xml           one gallery tile
   drawable/widget_bg_*.xml        ten backgrounds, one per theme
   drawable/theme_ring_*.xml       gallery tile outlines (Clear gets a dark backdrop variant)
@@ -173,9 +188,9 @@ docs/TECHNICAL-REPORT.md          audit, measurements, test matrix, known gaps
 ## Architecture
 
 ```
-widget tap ── PendingIntent(getActivity) ──> TapActivity (transparent, singleTop, own task)
+widget tap ── PendingIntent(getActivity) ──> TapActivity (no window, finishes in onCreate)
                                                │
-                           first digit ────────┤ 350 ms window
+                           first digit ────────┤ tap timeout window
                                                │
                         second digit ── resolve "12" / "21" / "11" / "22" immediately
                         timeout ────── resolve "1" / "2"
@@ -187,17 +202,26 @@ widget tap ── PendingIntent(getActivity) ──> TapActivity (transparent, s
 
 Key decisions, each of which exists for a reason:
 
-- **A transparent activity handles the tap.** Widgets cannot wait 350 ms inside a broadcast receiver
-  without being killed, and Android 10+ refuses background activity starts. Starting `TapActivity`
-  first means the app launch after the window is an ordinary foreground launch. Verified on Android 16.
+- **The tap activity never stays on screen.** Widgets cannot wait inside a broadcast receiver without
+  being killed, and Android 10+ refuses background activity starts, so a widget tap starts
+  `TapActivity` through a PendingIntent sent by the foreground launcher — that is what keeps the
+  delayed launch legal. But the activity must not keep a window while it waits: any window above the
+  home screen gets an input sink, so the second tap would never reach the widget and every pair would
+  silently degrade to a single. `TapActivity` therefore arms the timer and calls `finish()` inside
+  `onCreate`, before the system adds its window; the second tap then arrives as its own PendingIntent
+  and pairs immediately. Verified on Android 16 with 0.25 s to 1.2 s gaps at a 1500 ms window.
 - **One layout, weighted halves.** Two weighted `TextView`s and a 1 dp divider keep the digits centred
   and the divider in the middle at every resize. RemoteViews cannot inflate a plain `View`, so the
   divider is a `TextView` too.
 - **A theme is three values.** Background drawable, digit colour, divider colour — applied by the same
   code to the real widget and to the in-app previews, so the preview cannot drift from the home screen.
+  Clear's three values are a transparent background, white digits and a transparent divider, so it is
+  literally just the digits.
 - **Clear has its own layout.** Only Clear needs a digit shadow; putting it in the shared layout made
   Invisible render ghost glyphs, because a text shadow is drawn even for fully transparent text and
   RemoteViews cannot set a shadow per widget update.
+- **The tap window is a preference.** `Prefs.getTapTimeoutMs` is read when the first digit is held, so a
+  change in Settings applies to the very next tap — no restart, no widget refresh.
 - **No dependencies.** No AppCompat: appearance modes use framework theme attributes and `values-night`.
   No FileProvider: sharing is text-only.
 
@@ -214,7 +238,10 @@ Manual checks worth repeating after a change:
 2. Every theme paints correctly, including Clear and Invisible, in light and dark app mode.
 3. Resize the widget horizontally and vertically; both halves still hit their own region.
 4. Change the theme with two widget instances placed; both must repaint.
-5. `am force-stop` the app and relaunch: assignments, theme and appearance must survive.
+5. `am force-stop` the app and relaunch: assignments, theme, appearance and tap timeout must survive.
+6. Change the tap timeout, then check a single tap and pairs with slow (~1 s) and fast gaps.
+7. While a digit waits, tap another home-screen icon: it must react normally, which proves the tap
+   surface is not stealing touches.
 
 ## Signing and releases
 
@@ -243,5 +270,5 @@ These are deliberate, and pull requests that break them will be declined:
 | Exported components: `MainActivity` and the widget provider only | Everything else is `exported="false"` |
 | `FLAG_IMMUTABLE \| FLAG_UPDATE_CURRENT`, unique request code and data URI per half | The two halves can never collide or be hijacked |
 
-Release APK for v1.0: `TapKey-1.0.apk` — 51,414 bytes, zero permissions, minSdk 23, targetSdk 35,
-SHA-256 `156ca72736407feffb1d7ddf07ba3ef35a3407ed4ac5a324de7d210a4c95c2bc`.
+Release APK for v1.1: `TapKey-1.1.apk` — 55,961 bytes, zero permissions, versionCode 2, minSdk 23,
+targetSdk 35, SHA-256 `2583d839a007a6b88b31e7ba6b79a863ccba18f47f4c80d2abbb35bfe20ff8ef`.

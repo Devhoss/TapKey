@@ -16,7 +16,7 @@ public final class ThemeStyle {
     public static final int DEFAULT = 1; // Black
 
     /** Clear is the only theme with shadowed digits, so it needs its own copy of the layout. */
-    private static final int CLEAR = 3;
+    public static final int CLEAR = 3;
 
     private static final int[] BACKGROUND = {
             R.drawable.widget_bg_gold,

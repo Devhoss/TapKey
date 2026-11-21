@@ -6,10 +6,10 @@
     <string name="digit_two">2</string>
 
     <string name="intro_title">Tap digits. Launch apps.</string>
-    <string name="intro_body">Tap 1, 2, 11, 22, 12 or 21 on the home-screen widget to instantly open the app assigned to each sequence.</string>
+    <string name="intro_body">Tap 1, 2, 11, 22, 12 or 21 on the home-screen widget to instantly open the app assigned to each sequence. Themes, appearance and tap timing are in Settings.</string>
     <string name="how_it_works">How it works</string>
     <string name="tutorial_title">How it works</string>
-    <string name="tutorial_body">1. Long-press your home screen, choose Widgets, then drag the TapKey widget into place.\n\n2. Tap a digit once or twice: 1, 2, 11, 22, 12 or 21. A single digit waits a moment for a possible second tap, so 1 followed by 2 becomes the 12 sequence.\n\n3. Each sequence opens the app assigned to it. If nothing is assigned yet, TapKey opens the assignment screen for that sequence.\n\n4. Tap a shortcut row here to assign an app. Long-press a row to clear it.\n\n5. Pick a widget theme below. The Invisible theme hides the widget completely but keeps both tap areas working.</string>
+    <string name="tutorial_body">1. Long-press your home screen, choose Widgets, then drag the TapKey widget into place.\n\n2. Tap a digit once or twice: 1, 2, 11, 22, 12 or 21. A single digit waits a moment for a possible second tap, so 1 followed by 2 becomes the 12 sequence.\n\n3. Each sequence opens the app assigned to it. If nothing is assigned yet, TapKey opens the assignment screen for that sequence.\n\n4. Tap a shortcut row here to assign an app. Long-press a row to clear it.\n\n5. Open Settings to pick a widget theme, switch the app between System, Light and Dark, or change how long a single tap waits for a second tap. The Invisible theme hides the widget completely but keeps both tap areas working; Clear shows only the digits, with no panel and no divider.</string>
     <string name="tutorial_close">Got it</string>
 
     <string name="section_appearance">Appearance</string>
@@ -19,6 +19,15 @@
 
     <string name="section_shortcuts">Shortcuts</string>
     <string name="section_theme">Widget theme</string>
+    <string name="section_timing">Tap timing</string>
+
+    <string name="settings">Settings</string>
+    <string name="tap_timeout_title">Tap timeout</string>
+    <string name="tap_timeout_hint">Gap allowed between the two digits</string>
+    <string name="tap_timeout_value">%1$d ms</string>
+    <string name="tap_timeout_message">Between %1$d and %2$d ms. This is the window between the first and second tap — tapping again at any point inside it completes the pair — and also how long a lone digit waits before it launches. Default: 350 ms.</string>
+    <string name="tap_timeout_invalid">Enter a number between %1$d and %2$d</string>
+    <string name="tap_timeout_save">Save</string>
 
     <string name="shortcut_empty_title">Choose an app</string>
     <string name="shortcut_unavailable_title">App unavailable</string>
@@ -39,9 +48,9 @@
     <!-- Promotional copy for the share sheet. Text only: TapKey never shares files or links
          other than the optional public link below. -->
     <string name="share_text">TapKey — one tiny home-screen widget, six app shortcuts.\n\nTap 1, 2, 11, 22, 12 or 21 and the app you need opens instantly. No permissions, no ads, no accounts, no background services, under 50 KB.\n\nTen free widget themes, including a completely invisible one that still takes taps.</string>
-    <!-- Optional public link (source repo or store listing). Leave empty until one exists:
-         the share text then ends at the promo copy above. -->
-    <string name="share_link"></string>
+    <!-- Optional public link (source repo or store listing). The share text ends with it
+         when it is not empty. -->
+    <string name="share_link">https://github.com/Devhoss/TapKey</string>
     <string name="widget_description">Two digits, six app shortcuts.</string>
 
     <string name="theme_gold">Gold</string>
