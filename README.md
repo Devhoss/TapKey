@@ -121,6 +121,11 @@ deadline after the pair resolves.
 
 A sequence never produces both a single and a double launch, and the state resets after every resolution.
 
+**After closing an app, wait about 0.3 s before tapping the widget.** During the home-screen
+transition the launcher swallows the tap — the widget never receives it, so the first tap does
+nothing. Waiting a moment after the home screen settles fixes it; pressing the same digit again
+right afterwards works fine.
+
 ## Backup and restore
 
 TapKey participates in Android Auto Backup: the six app assignments, the theme and the appearance
