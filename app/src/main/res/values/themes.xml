@@ -42,17 +42,6 @@
     <!-- System setting: light here, dark via values-night/themes.xml. -->
     <style name="Theme.TapKey" parent="Theme.TapKey.Light" />
 
-    <!-- No window, no animation: the tap surface must never be seen. -->
-    <style name="Theme.TapKey.Invisible" parent="@android:style/Theme.Translucent.NoTitleBar">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowDisablePreview">true</item>
-        <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
     <style name="SectionLabel">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

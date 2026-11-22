@@ -43,16 +43,21 @@ public class TapKeyWidgetProvider extends AppWidgetProvider {
         int theme = Prefs.getTheme(context);
         RemoteViews views = new RemoteViews(context.getPackageName(), ThemeStyle.layout(theme));
         ThemeStyle.applyToWidget(context, views, theme);
-        views.setOnClickPendingIntent(R.id.tap_one, digitPendingIntent(context, 1));
-        views.setOnClickPendingIntent(R.id.tap_two, digitPendingIntent(context, 2));
+        views.setOnClickPendingIntent(R.id.tap_one, digitPendingIntent(context, appWidgetId, 1));
+        views.setOnClickPendingIntent(R.id.tap_two, digitPendingIntent(context, appWidgetId, 2));
         manager.updateAppWidget(appWidgetId, views);
     }
 
-    private static PendingIntent digitPendingIntent(Context context, int digit) {
-        Intent intent = new Intent(context, TapActivity.class)
-                .setData(Uri.parse("tapkey://tap/" + digit))
-                .putExtra(TapActivity.EXTRA_DIGIT, digit);
+    /**
+     * Each digit of each widget gets its own broadcast. A broadcast reaches the app on every tap,
+     * where a second launch of the same activity would be merged into the one already on top.
+     */
+    private static PendingIntent digitPendingIntent(Context context, int appWidgetId, int digit) {
+        Intent intent = new Intent(context, TapReceiver.class)
+                .setAction(TapReceiver.ACTION_TAP)
+                .setData(Uri.parse("tapkey://tap/" + appWidgetId + "/" + digit))
+                .putExtra(TapReceiver.EXTRA_DIGIT, digit);
         int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
-        return PendingIntent.getActivity(context, digit, intent, flags);
+        return PendingIntent.getBroadcast(context, appWidgetId * 10 + digit, intent, flags);
     }
 }

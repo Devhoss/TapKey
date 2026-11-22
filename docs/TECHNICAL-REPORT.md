@@ -21,7 +21,7 @@ What could actually be established about *Digits – Tap Shortcuts to Apps* (`co
 
 **What could not be measured.** The reference is a paid Play-only app and was never installed, so its
 exact tap window, tutorial flow, resize behaviour and picker layout were **not** observed. The sequence
-window is therefore the specified fallback, a single constant `TapActivity.SEQUENCE_TIMEOUT_MS = 350`.
+window is therefore the specified fallback, a single constant `Prefs.TAP_TIMEOUT_DEFAULT = 350`.
 
 **The nine-versus-ten theme question** is unresolved for the same reason. All ten advertised styles ship,
 and none is gated.
@@ -29,7 +29,7 @@ and none is gated.
 ## 2. Architecture
 
 ```
-widget tap ── PendingIntent(getActivity) ──> TapActivity (transparent, singleTop, own task)
+widget tap ── PendingIntent(getBroadcast) ──> TapReceiver (no window, nothing started per tap)
                                               │
                           first digit ────────┤ 350 ms window
                                               │
@@ -50,8 +50,11 @@ widget tap ── PendingIntent(getActivity) ──> TapActivity (transparent, s
   attributes (`paletteBg`, `paletteSurface`, …) defined by `Theme.TapKey.Light` / `.Dark`.
   `values-night/themes.xml` points `Theme.TapKey` at the dark palette so "System" follows the OS.
   No AppCompat, no `AppCompatDelegate`, no new dependency.
-* `TapKeyWidgetProvider` — `RemoteViews`, one PendingIntent per half, `refreshAll()` for every placed
-  instance.
+* `TapKeyWidgetProvider` — `RemoteViews`, one broadcast PendingIntent per half and per widget id,
+  `refreshAll()` for every placed instance.
+* `TapReceiver` — the tap entry point: holds the first digit, counts down the window, resolves the
+  pair on the second tap or the single on timeout, then hands the sequence to `SequenceLauncher`.
+  No activity is started per tap, so no tap can be merged into an activity that is already on top.
 * `ChooseAppActivity` — background launcher scan, in-memory filter.
 * `Ui` — system-bar insets (edge-to-edge is forced by `targetSdk 35`) plus palette attribute resolution.
 
@@ -168,9 +171,9 @@ None. No test produced a wrong launch, a duplicate launch, a crash, or an ANR.
   user action.
 * **The 350 ms window is a chosen value**, not a measurement of the reference app. It is one constant in
   `TapActivity`.
-* **The tap surface is a transparent activity.** This is deliberate: it keeps the follow-up launch inside
-  the foreground-activity rules on Android 10+. It means the tap is handled by an activity that becomes
-  the foreground app for up to 350 ms.
+* **The tap is handled by a broadcast receiver.** The widget click keeps the follow-up launch inside the
+  foreground-activity rules on Android 10+; nothing is drawn and no activity is started per tap, so the
+  home screen stays fully tappable for the second digit.
 * **Settings resumes its own last screen.** After the user left Settings on "Default home app", tapping
   `1` reopened Settings on that page. TapKey launched `com.android.settings/.Settings` once; the visible
   page is Android's task restoration inside Settings, not a TapKey behaviour.
@@ -183,9 +186,10 @@ None. No test produced a wrong launch, a duplicate launch, a crash, or an ANR.
   ignored (verified with `git check-ignore`); the repository was initialised before the first commit.
 * No debug hooks, no debug-only activities, no exported test entry points. Exported components:
   `MainActivity` (launcher entry) and `TapKeyWidgetProvider` (the system must be able to send
-  `APPWIDGET_UPDATE`). `TapActivity` and `ChooseAppActivity` are `exported="false"`.
-* PendingIntents use `FLAG_IMMUTABLE | FLAG_UPDATE_CURRENT`, one request code per digit and a distinct
-  `tapkey://tap/<digit>` data URI, so the two halves can never collide.
+  `APPWIDGET_UPDATE`). `TapReceiver` and `ChooseAppActivity` are `exported="false"`.
+* PendingIntents use `FLAG_IMMUTABLE | FLAG_UPDATE_CURRENT`, one request code per widget id and
+  digit, and a distinct `tapkey://tap/<widgetId>/<digit>` data URI, so the two halves and any two
+  placed widgets can never collide.
 * No network code, no analytics, no storage of user content beyond six package names and two integers.
 
 **Key backup requirement.** `tapkey-release.jks` is the only key that can update an installed TapKey.

@@ -41,16 +41,12 @@
             android:exported="false"
             android:parentActivityName=".MainActivity" />
 
-        <!-- Transparent, invisible host for the tap sequence. Launched from the widget's
-             PendingIntent so the sequence can be timed while TapKey is in the foreground,
-             which keeps the follow-up app launch inside Android's background-launch rules. -->
-        <activity
-            android:name=".TapActivity"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:launchMode="singleTop"
-            android:taskAffinity="com.tapkey.app.tapsurface"
-            android:theme="@style/Theme.TapKey.Invisible" />
+        <!-- Widget taps arrive here as broadcasts, so a repeated digit is never merged into an
+             activity that is already on top. The receiver owns the single/pair timing and launches
+             the assigned app itself; no tap ever puts a window over the home screen. -->
+        <receiver
+            android:name=".TapReceiver"
+            android:exported="false" />
 
         <receiver
             android:name=".TapKeyWidgetProvider"

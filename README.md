@@ -44,11 +44,11 @@ and tested with both Samsung One UI Home and Smart Launcher.
 
 ## Install
 
-Download `TapKey-1.1.apk` from the [latest release](https://github.com/Devhoss/tapkey/releases/latest)
+Download `TapKey-1.2.apk` from the [latest release](https://github.com/Devhoss/tapkey/releases/latest)
 and open it on the phone, or sideload it:
 
 ```bash
-adb install -r TapKey-1.1.apk
+adb install -r TapKey-1.2.apk
 ```
 
 Android may ask you to allow installing from this source. The APK is signed with TapKey's release key,
@@ -155,7 +155,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 The release artifact is named from `versionName`:
 
 ```
-app/build/outputs/apk/release/TapKey-1.1.apk
+app/build/outputs/apk/release/TapKey-1.2.apk
 ```
 
 ## Project layout
@@ -165,7 +165,7 @@ app/src/main/java/com/tapkey/app/
   MainActivity.java          shortcut rows, how-it-works, Settings entry point
   SettingsActivity.java      appearance, theme gallery, tap timeout, share
   ChooseAppActivity.java     app picker: installed launcher apps + search
-  TapActivity.java           tap entry point and the sequence engine (finishes before drawing)
+  TapReceiver.java           tap entry point and the sequence engine (broadcast, no window)
   TapKeyWidgetProvider.java  AppWidgetProvider, RemoteViews rendering, click PendingIntents
   SequenceLauncher.java      sequence → launch app, or → assignment screen
   ThemeStyle.java            the 10 widget themes (background, digit, divider) for widget and previews
@@ -193,7 +193,7 @@ docs/TECHNICAL-REPORT.md          audit, measurements, test matrix, known gaps
 ## Architecture
 
 ```
-widget tap ── PendingIntent(getActivity) ──> TapActivity (no window, finishes in onCreate)
+widget tap ── PendingIntent(getBroadcast) ──> TapReceiver (no window, nothing started per tap)
                                                │
                            first digit ────────┤ tap timeout window
                                                │
@@ -207,14 +207,17 @@ widget tap ── PendingIntent(getActivity) ──> TapActivity (no window, fin
 
 Key decisions, each of which exists for a reason:
 
-- **The tap activity never stays on screen.** Widgets cannot wait inside a broadcast receiver without
-  being killed, and Android 10+ refuses background activity starts, so a widget tap starts
-  `TapActivity` through a PendingIntent sent by the foreground launcher — that is what keeps the
-  delayed launch legal. But the activity must not keep a window while it waits: any window above the
-  home screen gets an input sink, so the second tap would never reach the widget and every pair would
-  silently degrade to a single. `TapActivity` therefore arms the timer and calls `finish()` inside
-  `onCreate`, before the system adds its window; the second tap then arrives as its own PendingIntent
-  and pairs immediately. Verified on Android 16 with 0.25 s to 1.2 s gaps at a 1500 ms window.
+- **A tap is a broadcast, not an activity launch.** Two taps of the same digit carry identical
+  intents, so the platform merged the second launch into the activity already on top; while the
+  process was starting, or the surface was finishing, that merge dropped the tap altogether and
+  `1 + 1` resolved as a single `1`. Broadcasts are never merged, so each half of the widget sends
+  its own `PendingIntent.getBroadcast`, keyed by widget id and digit. The widget click is sent by the
+  foreground launcher, which is what keeps the resulting app launch inside Android's
+  background-activity-start rules.
+- **No component is started per tap.** `TapReceiver` holds the first digit and counts down the
+  window in a handler; a second tap resolves the pair at once. The receive itself is finished
+  before the window ends: broadcasts to one receiver are serialized, so holding the dispatch open
+  with `goAsync()` blocked the second tap's broadcast until the single had already launched.
 - **One layout, weighted halves.** Two weighted `TextView`s and a 1 dp divider keep the digits centred
   and the divider in the middle at every resize. RemoteViews cannot inflate a plain `View`, so the
   divider is a `TextView` too.
@@ -256,8 +259,8 @@ falls back to an unsigned release. Signing material is git-ignored (`*.jks`, `*.
 
 ```bash
 gradle :app:assembleRelease
-gh release create v1.1 app/build/outputs/apk/release/TapKey-1.1.apk \
-  --target master --title "TapKey 1.1" --notes "…"
+gh release create v1.2 app/build/outputs/apk/release/TapKey-1.2.apk \
+  --target main --title "TapKey 1.2" --notes "…"
 ```
 
 **Back up the keystore.** `tapkey-release.jks` is the only key that can update an installed TapKey.
@@ -275,5 +278,5 @@ These are deliberate, and pull requests that break them will be declined:
 | Exported components: `MainActivity` and the widget provider only | Everything else is `exported="false"` |
 | `FLAG_IMMUTABLE \| FLAG_UPDATE_CURRENT`, unique request code and data URI per half | The two halves can never collide or be hijacked |
 
-Release APK for v1.1: `TapKey-1.1.apk` — 55,961 bytes, zero permissions, versionCode 2, minSdk 23,
-targetSdk 35, SHA-256 `2583d839a007a6b88b31e7ba6b79a863ccba18f47f4c80d2abbb35bfe20ff8ef`.
+Release APK for v1.2: `TapKey-1.2.apk` — 55,736 bytes, zero permissions, versionCode 3, minSdk 23,
+targetSdk 35, SHA-256 `5719c33a6efa240dd2e85c5d9de0683c63dcaede530d098069594b7503e6cf86`.
