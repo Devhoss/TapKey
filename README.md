@@ -44,11 +44,11 @@ and tested with both Samsung One UI Home and Smart Launcher.
 
 ## Install
 
-Download `TapKey-1.2.apk` from the [latest release](https://github.com/Devhoss/tapkey/releases/latest)
+Download `TapKey-1.2.1.apk` from the [latest release](https://github.com/Devhoss/tapkey/releases/latest)
 and open it on the phone, or sideload it:
 
 ```bash
-adb install -r TapKey-1.2.apk
+adb install -r TapKey-1.2.1.apk
 ```
 
 Android may ask you to allow installing from this source. The APK is signed with TapKey's release key,
@@ -160,7 +160,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 The release artifact is named from `versionName`:
 
 ```
-app/build/outputs/apk/release/TapKey-1.2.apk
+app/build/outputs/apk/release/TapKey-1.2.1.apk
 ```
 
 ## Project layout
@@ -264,8 +264,8 @@ falls back to an unsigned release. Signing material is git-ignored (`*.jks`, `*.
 
 ```bash
 gradle :app:assembleRelease
-gh release create v1.2 app/build/outputs/apk/release/TapKey-1.2.apk \
-  --target main --title "TapKey 1.2" --notes "…"
+gh release create v1.2.1 app/build/outputs/apk/release/TapKey-1.2.1.apk \
+  --target main --title "TapKey 1.2.1" --notes "…"
 ```
 
 **Back up the keystore.** `tapkey-release.jks` is the only key that can update an installed TapKey.
@@ -283,5 +283,5 @@ These are deliberate, and pull requests that break them will be declined:
 | Exported components: `MainActivity` and the widget provider only | Everything else is `exported="false"` |
 | `FLAG_IMMUTABLE \| FLAG_UPDATE_CURRENT`, unique request code and data URI per half | The two halves can never collide or be hijacked |
 
-Release APK for v1.2: `TapKey-1.2.apk` — 55,736 bytes, zero permissions, versionCode 3, minSdk 23,
-targetSdk 35, SHA-256 `5719c33a6efa240dd2e85c5d9de0683c63dcaede530d098069594b7503e6cf86`.
+Release APK for v1.2.1: `TapKey-1.2.1.apk` — 55,942 bytes, zero permissions, versionCode 4, minSdk 23,
+targetSdk 35, SHA-256 `d729ad294ab5dfe08dfdfb829a04d65c7e831e033026830954bbfe1ce1d519a3`.
