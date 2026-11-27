@@ -10,8 +10,6 @@ public final class Prefs {
     private static final String KEY_THEME = "widget_theme";
     private static final String KEY_APPEARANCE = "appearance";
     private static final String KEY_TAP_TIMEOUT = "tap_timeout_ms";
-    private static final String KEY_PENDING_SEQUENCE = "pending_sequence";
-    private static final String KEY_PENDING_SINCE = "pending_since";
 
     /** Bounds of the single-tap window, in milliseconds. */
     public static final int TAP_TIMEOUT_MIN = 100;
@@ -64,33 +62,6 @@ public final class Prefs {
 
     public static void setTapTimeoutMs(Context context, int milliseconds) {
         store(context).edit().putInt(KEY_TAP_TIMEOUT, clampTimeout(milliseconds)).apply();
-    }
-
-    /**
-     * The digit currently held for its window, persisted so a restarted process can resolve it.
-     * These writes are synchronous on purpose: they are tiny and once per tap, and an async one
-     * is lost exactly when it matters — when the system kills the freshly restarted process.
-     */
-    static void setPendingSequence(Context context, String sequence, long since) {
-        store(context).edit()
-                .putString(KEY_PENDING_SEQUENCE, sequence)
-                .putLong(KEY_PENDING_SINCE, since)
-                .commit();
-    }
-
-    static String getPendingSequence(Context context) {
-        return store(context).getString(KEY_PENDING_SEQUENCE, null);
-    }
-
-    static long getPendingSince(Context context) {
-        return store(context).getLong(KEY_PENDING_SINCE, 0L);
-    }
-
-    static void clearPendingSequence(Context context) {
-        store(context).edit()
-                .remove(KEY_PENDING_SEQUENCE)
-                .remove(KEY_PENDING_SINCE)
-                .commit();
     }
 
     private static int clampTimeout(int milliseconds) {

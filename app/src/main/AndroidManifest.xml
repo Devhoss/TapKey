@@ -11,11 +11,6 @@
         </intent>
     </queries>
 
-    <!-- Lets the held digit resolve through a frozen or restarted process: exact alarms are
-         granted by default up to Android 12 and opt-in afterwards; without them the window
-         falls back to inexact alarms. Nothing user-visible is scheduled. -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"

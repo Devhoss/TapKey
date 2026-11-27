@@ -126,16 +126,18 @@ transition the launcher may swallow the tap — the widget never receives it, so
 nothing. Waiting until the home screen has fully settled fixes it; pressing the same digit again
 right afterwards works fine.
 
-Three safeguards harden the window against slow or hostile delivery:
+Two safeguards harden the window against slow or hostile delivery:
 
 - **Debounce.** One physical tap can arrive as two broadcasts when a launcher double-fires it
   during a transition. Taps under 70 ms apart are ignored, so the duplicate cannot complete a
   pair the finger never typed. Real fingers are never that fast.
 - **Grace.** Some phones freeze background apps mid-window, which can delay a digit's delivery
   past the timeout. A second tap still completes the pair if it arrives up to 200 ms late, and a
-  resolution that wakes up late holds briefly longer for a digit already in flight.
-- **Persistence.** The held digit is saved and backed by an alarm, so a system that kills the
-  process mid-window still resolves the tap instead of dropping it.
+  resolution that wakes up late holds briefly longer for a digit already in flight. On-time
+  singles are never delayed by this.
+
+If the system kills the process mid-window, the held digit dies with it and that tap is dropped —
+the next tap starts a fresh sequence.
 
 **Keep TapKey out of your battery optimizer.** On Samsung, remove it from *Sleeping apps* /
 *Deep sleeping apps* (Settings → Battery → Background usage limits); on OnePlus, disable *App
