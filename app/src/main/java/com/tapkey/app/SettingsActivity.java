@@ -181,18 +181,26 @@ public class SettingsActivity extends Activity {
         container.addView(input, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.tap_timeout_title)
                 .setMessage(getString(R.string.tap_timeout_message,
                         Prefs.TAP_TIMEOUT_MIN, Prefs.TAP_TIMEOUT_MAX))
                 .setView(container)
                 .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(R.string.tap_timeout_save,
-                        (dialog, which) -> saveTapTimeout(input))
-                .show();
+                .setPositiveButton(R.string.tap_timeout_save, null)
+                .create();
+        dialog.show();
+        // Saving is gated here so an invalid value keeps the dialog up for another try instead
+        // of dismissing with only a toast left behind.
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            if (saveTapTimeout(input)) {
+                dialog.dismiss();
+            }
+        });
     }
 
-    private void saveTapTimeout(EditText input) {
+    /** Stores the entered window. Returns false, with a toast, when the value is unusable. */
+    private boolean saveTapTimeout(EditText input) {
         int milliseconds;
         try {
             milliseconds = Integer.parseInt(input.getText().toString().trim());
@@ -202,10 +210,11 @@ public class SettingsActivity extends Activity {
         if (milliseconds < Prefs.TAP_TIMEOUT_MIN || milliseconds > Prefs.TAP_TIMEOUT_MAX) {
             Toast.makeText(this, getString(R.string.tap_timeout_invalid,
                     Prefs.TAP_TIMEOUT_MIN, Prefs.TAP_TIMEOUT_MAX), Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
         Prefs.setTapTimeoutMs(this, milliseconds);
         bindTimeout();
+        return true;
     }
 
     // ---------------------------------------------------------------- share

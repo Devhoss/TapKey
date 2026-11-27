@@ -121,10 +121,26 @@ deadline after the pair resolves.
 
 A sequence never produces both a single and a double launch, and the state resets after every resolution.
 
-**After closing an app, wait about 0.3 s before tapping the widget.** During the home-screen
-transition the launcher swallows the tap — the widget never receives it, so the first tap does
-nothing. Waiting a moment after the home screen settles fixes it; pressing the same digit again
+**After closing an app, wait about 0.5–1 s before tapping the widget.** During the home-screen
+transition the launcher may swallow the tap — the widget never receives it, so the first tap does
+nothing. Waiting until the home screen has fully settled fixes it; pressing the same digit again
 right afterwards works fine.
+
+Three safeguards harden the window against slow or hostile delivery:
+
+- **Debounce.** One physical tap can arrive as two broadcasts when a launcher double-fires it
+  during a transition. Taps under 70 ms apart are ignored, so the duplicate cannot complete a
+  pair the finger never typed. Real fingers are never that fast.
+- **Grace.** Some phones freeze background apps mid-window, which can delay a digit's delivery
+  past the timeout. A second tap still completes the pair if it arrives up to 200 ms late, and a
+  resolution that wakes up late holds briefly longer for a digit already in flight.
+- **Persistence.** The held digit is saved and backed by an alarm, so a system that kills the
+  process mid-window still resolves the tap instead of dropping it.
+
+**Keep TapKey out of your battery optimizer.** On Samsung, remove it from *Sleeping apps* /
+*Deep sleeping apps* (Settings → Battery → Background usage limits); on OnePlus, disable *App
+Quick Freeze* for TapKey or lock it in recents. These features freeze the app between taps, which
+adds launch delay precisely when you are using the widget.
 
 ## Backup and restore
 

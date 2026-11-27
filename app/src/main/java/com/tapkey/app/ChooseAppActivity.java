@@ -7,8 +7,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -31,12 +33,16 @@ public class ChooseAppActivity extends Activity {
 
     public static final String EXTRA_SEQUENCE = "com.tapkey.app.extra.SEQUENCE";
 
+    /** Widget taps that stray onto this screen land in its first moments on top; ignore them. */
+    private static final long STRAY_TOUCH_GUARD_MS = 800;
+
     private String sequence;
     private EditText searchField;
     private ListView listView;
     private View progressView;
     private View emptyView;
     private AppAdapter adapter;
+    private long openedAt;
 
     private final List<AppEntry> allApps = new ArrayList<>();
 
@@ -47,10 +53,21 @@ public class ChooseAppActivity extends Activity {
         super.onCreate(savedInstanceState);
         String requested = getIntent().getStringExtra(EXTRA_SEQUENCE);
         sequence = Shortcuts.isValid(requested) ? requested : Shortcuts.ALL[0];
+        openedAt = SystemClock.elapsedRealtime();
         setContentView(R.layout.activity_choose_app);
         Ui.applySystemBarInsets(this, R.id.picker_root);
 
         importViews();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        // A second digit of a combo whose screen this picker took over would otherwise land on
+        // the list and silently assign whichever app it hit.
+        if (SystemClock.elapsedRealtime() - openedAt < STRAY_TOUCH_GUARD_MS) {
+            return true;
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     private void importViews() {

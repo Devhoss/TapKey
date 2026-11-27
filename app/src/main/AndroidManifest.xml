@@ -11,19 +11,24 @@
         </intent>
     </queries>
 
+    <!-- Lets the held digit resolve through a frozen or restarted process: exact alarms are
+         granted by default up to Android 12 and opt-in afterwards; without them the window
+         falls back to inexact alarms. Nothing user-visible is scheduled. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="${appLabel}"
         android:supportsRtl="true"
         android:theme="@style/Theme.TapKey">
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name">
+            android:label="${appLabel}">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -51,7 +56,7 @@
         <receiver
             android:name=".TapKeyWidgetProvider"
             android:exported="true"
-            android:label="@string/app_name">
+            android:label="${appLabel}">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

@@ -2,7 +2,6 @@ package com.tapkey.app;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 
 /** Turns a tap sequence into an app launch, or into the assignment screen when it cannot launch. */
 public final class SequenceLauncher {
@@ -48,13 +47,5 @@ public final class SequenceLauncher {
         } catch (RuntimeException ignored) {
             // Nothing sensible left to do: the app cannot open its own screen.
         }
-    }
-
-    public static boolean isInstalled(Context context, String packageName) {
-        if (packageName == null) {
-            return false;
-        }
-        PackageManager manager = context.getPackageManager();
-        return manager.getLaunchIntentForPackage(packageName) != null;
     }
 }

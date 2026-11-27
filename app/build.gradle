@@ -19,6 +19,7 @@ android {
         versionCode 4
         versionName '1.2.1'
         resourceConfigurations += ['en']
+        manifestPlaceholders = [appLabel: 'TapKey']
     }
 
     signingConfigs {
@@ -33,6 +34,12 @@ android {
     }
 
     buildTypes {
+        // A distinct id and label so a debug build can sit next to the release install and its
+        // widget without touching either.
+        debug {
+            applicationIdSuffix '.debug'
+            manifestPlaceholders = [appLabel: 'TapKey Debug']
+        }
         release {
             minifyEnabled true
             shrinkResources true
