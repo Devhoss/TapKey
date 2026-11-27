@@ -35,7 +35,8 @@ import android.os.SystemClock;
  *
  * <p>Taps inside a short debounce are ignored: one physical tap can arrive as two broadcasts
  * when a launcher double-fires the tap during a transition, and a duplicate must not complete a
- * pair the finger never typed.
+ * pair the finger never typed. The debounce does not apply on a freshly started process, where
+ * the first tap's wake-up delivers every queued digit at once.
  */
 public class TapReceiver extends BroadcastReceiver {
 
@@ -44,8 +45,14 @@ public class TapReceiver extends BroadcastReceiver {
 
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
-    /** One physical tap cannot repeat this fast; launcher double-fires and duplicates can. */
-    private static final long DEBOUNCE_MS = 70;
+    /**
+     * One physical tap cannot repeat this fast; launcher double-fires and duplicates can.
+     * Exempt while the process is brand new: when the first tap wakes a dead process, both
+     * digits' broadcasts queue behind the start and deliver within milliseconds of each other,
+     * so a compressed pair must not be mistaken for a duplicate.
+     */
+    private static final long DEBOUNCE_MS = 50;
+    private static final long FRESH_PROCESS_MS = 1000;
     /**
      * Extra delay a second tap may lag its window by and still complete the pair, and extra
      * time a late resolution holds before the lone digit resolves on its own.
@@ -60,6 +67,8 @@ public class TapReceiver extends BroadcastReceiver {
     private static Runnable sPendingExpiry;
     private static boolean sPendingExtended;
     private static long sLastTapAt;
+    /** Set when this process first loaded the receiver, to tell a cold start from a warm one. */
+    private static final long sProcessEpoch = SystemClock.elapsedRealtime();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -76,7 +85,8 @@ public class TapReceiver extends BroadcastReceiver {
     /** Runs on the main thread, one tap at a time. */
     private static void onTap(Context context, int digit) {
         long now = SystemClock.elapsedRealtime();
-        if (now - sLastTapAt < DEBOUNCE_MS) {
+        boolean freshProcess = now - sProcessEpoch < FRESH_PROCESS_MS;
+        if (!freshProcess && now - sLastTapAt < DEBOUNCE_MS) {
             return;
         }
         sLastTapAt = now;

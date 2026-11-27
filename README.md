@@ -129,8 +129,9 @@ right afterwards works fine.
 Two safeguards harden the window against slow or hostile delivery:
 
 - **Debounce.** One physical tap can arrive as two broadcasts when a launcher double-fires it
-  during a transition. Taps under 70 ms apart are ignored, so the duplicate cannot complete a
-  pair the finger never typed. Real fingers are never that fast.
+  during a transition. Taps under 50 ms apart are ignored, so the duplicate cannot complete a
+  pair the finger never typed. Real fingers are never that fast. The debounce does not apply on
+  a freshly started process, where a dead app's first tap delivers both digits at once.
 - **Grace.** Some phones freeze background apps mid-window, which can delay a digit's delivery
   past the timeout. A second tap still completes the pair if it arrives up to 200 ms late, and a
   resolution that wakes up late holds briefly longer for a digit already in flight. On-time
