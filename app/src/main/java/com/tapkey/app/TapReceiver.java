@@ -33,10 +33,10 @@ import android.os.SystemClock;
  * for a second digit that may already be in flight. A process killed mid-window simply drops the
  * tap: the held digit dies with the process, and nothing is launched late.
  *
- * <p>Taps inside a short debounce are ignored: one physical tap can arrive as two broadcasts
- * when a launcher double-fires the tap during a transition, and a duplicate must not complete a
- * pair the finger never typed. The debounce does not apply on a freshly started process, where
- * the first tap's wake-up delivers every queued digit at once.
+ * <p>A short debounce against launcher double-fires exists but is disabled by default: delivery
+ * gaps of genuine pairs compress below any safe threshold whenever a launcher or the freezer
+ * delays them, so the cost in dropped pairs outweighs the unproven duplicate risk. Re-enable it
+ * only against a confirmed double-firing launcher.
  */
 public class TapReceiver extends BroadcastReceiver {
 
@@ -46,12 +46,12 @@ public class TapReceiver extends BroadcastReceiver {
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
     /**
-     * One physical tap cannot repeat this fast; launcher double-fires and duplicates can.
-     * Exempt while the process is brand new: when the first tap wakes a dead process, both
-     * digits' broadcasts queue behind the start and deliver within milliseconds of each other,
-     * so a compressed pair must not be mistaken for a duplicate.
+     * Disabled (0): delivery gaps of genuine pairs were measured down to single-digit
+     * milliseconds whenever a launcher or freezer compresses them, so any threshold eats real
+     * pairs. Set this to 50 only if a launcher is confirmed to double-fire one physical tap as
+     * two broadcasts; the fresh-process exemption below must stay with it.
      */
-    private static final long DEBOUNCE_MS = 50;
+    private static final long DEBOUNCE_MS = 0;
     private static final long FRESH_PROCESS_MS = 1000;
     /**
      * Extra delay a second tap may lag its window by and still complete the pair, and extra

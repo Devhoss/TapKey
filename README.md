@@ -42,6 +42,13 @@ services, no network access, no analytics.** The signed release APK is **55,961 
 Android 6.0 (API 23) or newer. Built and verified against Android 16 / One UI 8 on a Galaxy A53 5G,
 and tested with both Samsung One UI Home and Smart Launcher.
 
+### Tested on
+
+- Galaxy A53 5G, Android 16 / One UI 8, Smart Launcher (physical device) — 2,400-trial tap matrix.
+- Android 17 API 37.2 emulator (Pixel Launcher) — widget placement, all six sequences and
+  cross-widget taps.
+- Android 12–15 emulators were not tested.
+
 ## Install
 
 Download `TapKey-1.2.1.apk` from the [latest release](https://github.com/Devhoss/tapkey/releases/latest)
@@ -128,10 +135,12 @@ right afterwards works fine.
 
 Two safeguards harden the window against slow or hostile delivery:
 
-- **Debounce.** One physical tap can arrive as two broadcasts when a launcher double-fires it
-  during a transition. Taps under 50 ms apart are ignored, so the duplicate cannot complete a
-  pair the finger never typed. Real fingers are never that fast. The debounce does not apply on
-  a freshly started process, where a dead app's first tap delivers both digits at once.
+- **Debounce (disabled by default).** One physical tap can arrive as two broadcasts when a
+  launcher double-fires it during a transition. A short window can ignore such duplicates — but
+  it also eats real pairs, because launchers and freezers compress the delivery of two genuine
+  taps to single-digit milliseconds (a cold app start delivers every queued digit at once).
+  Measured on real hardware, the compressed-pair cost outweighed the duplicate risk, so
+  `DEBOUNCE_MS` ships at 0. If a launcher is ever confirmed to double-fire taps, set it to 50.
 - **Grace.** Some phones freeze background apps mid-window, which can delay a digit's delivery
   past the timeout. A second tap still completes the pair if it arrives up to 200 ms late, and a
   resolution that wakes up late holds briefly longer for a digit already in flight. On-time
